@@ -29,9 +29,8 @@ namespace Counter
         }
     }
 
-    class Cart<T> : ICountable
+    public class Cart<T> : ICountable
     {
-        int ICountable.Count { get; set; }
 
         List<Box<T>> boxesOfApples = new List<Box<T>>();
 
@@ -39,40 +38,60 @@ namespace Counter
         {
             boxesOfApples.Add(box);
         }
+        public int Count
+        {
+            get
+            {
+                int items = 0;
+                foreach (var box in boxesOfApples)
+                {
+                   items += box.Count;
+                }
+                return items;
+            }
+        }
     }
 
-    class Box<T> : ICountable
+   public class Box<T> : ICountable
     {
         List<Apple> boxOfApples = new List<Apple>();
-        int ICountable.Count { get; set; }
 
         public void Add(Apple apple)
         {
             boxOfApples.Add(apple);
         }
-    }
-    class Apple : ICountable
-    {
-        int ICountable.Count { get; set; }
-
-        public int Count()
+        public int Count
         {
-            return +1;
+            get
+            {
+                return boxOfApples.Count;
+            }
+        }
+    }
+    public class Apple : ICountable
+    {
+        public int Count
+        {
+            get
+            {
+                return 1;
+            }
         }
     }
 
-    class Counter<T>
+    class Counter<T> where T : ICountable
     {
         public void Add(T item)
         {
+            Count += item.Count;
         }
 
-        public int Count;
-        
-       
+        public int Count { get; set; }
+
+
     }
     interface ICountable
     {
-        int Count { get; set; }
+        int Count {get;}
     }
 }
